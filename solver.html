@@ -16,8 +16,6 @@ var huecos = [
 	"rgwy00wgb".split("")
 ];
 
-var piezasDict = [{},{},{},{}]; //To check repeated chips
-
 var allPiezas = [];
 
 function rotate(pieza){
@@ -89,11 +87,17 @@ function calcularPermutaciones(){
 var permutaciones = calcularPermutaciones();
 
 //Al derecho:
-function check(){
+function check(objective){
+	
 	cantResults = 0;
 
 	var pix, rot, lastPieza;
+	var piezasDict;
+	var results = [];
+
 	for(pix = 0; pix < permutaciones.length; pix++){
+
+		piezasDict = [{},{},{},{}]; //To check repeated chips
 
 		var i,j,k,l;
 		var pi, pj, pk, pl;
@@ -134,9 +138,14 @@ function check(){
 							pl = rotate(pl);
 						}
 
-						if(matchObjective( [pi, pj, pk, pl] )){
+						//if(pix==0)console.log('testing: ', i,j,k,l );
+
+						if(matchObjective(objective, [pi, pj, pk, pl] )){
 							cantResults++;
-							console.log('match: ', permutaciones[pix], "  rots: ", i,j,k,l );
+							results.push({
+								orden: permutaciones[pix], 
+								rotaciones: [i,j,k,l]
+							})
 						}
 
 					}
@@ -145,13 +154,12 @@ function check(){
 		}
 
 	}
-	console.log("Cantidad Resultados", cantResults)
+
+	return results;
 
 }
 
-
-
-function matchObjective(pz){
+function matchObjective(objective, pz){
 
 	var i, key, match = {}
 
@@ -184,9 +192,7 @@ function matchObjective(pz){
 
 }
 
-check();
-
-console.log('end')
+console.log("results ", check(objective));
 
 </script>
 
